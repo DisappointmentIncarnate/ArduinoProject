@@ -6,6 +6,8 @@ Servo enemy2; //512 is the potentiometer area's halfway point
 int enemy2_location[] = {472, 552};
 Servo enemy3; 
 int enemy3_location[] = {730, 770};
+Servo enemy4;
+Servo char2;
 
 // INPUT: Potentiometer should be connected to 5V and GND
 int potPin = A3; // Potentiometer output connected to analog pin 3
@@ -17,11 +19,15 @@ bool running = true; //flag used to continue the program
 bool enemy1_on; 
 bool enemy2_on; 
 bool enemy3_on;
+bool enemy4_on;
+bool char2_on;
 
 int randNumber;
 int buttonState;
 
-int timer = 2000;
+int groundTimer = 2000;
+int char2Timer = 2000;
+int upperTimer = 2000;
 
 void setup()
 {
@@ -50,19 +56,30 @@ void loop()
     //Serial.println(potVal); //literally just print the value out
     delay(1);
 
-    if(timer == 0){
+    if(groundTimer == 0){
       extendServo(randNumber, potVal);
-      timer = 2000;
+      groundTimer = 2000;
     }else{
-      timer--;
+      groundTimer--;
+    }
+
+    if(upperTimer == 0){
+      randNumber = random(2)+1;
+      if(randNumber % 2 == 0){
+        enemy4.write(180);
+        enemy4_on = true;
+      }
+      upperTimer == 2000;
+    }else{
+      upperTimer--;
     }
 
     retractServo(determineArea(potVal));
     if(potVal == 0 ){
       running = false;
     }
+    buttonPush();
   }
-  buttonPush();
 }
 
 void startup_motors(){
@@ -70,22 +87,40 @@ void startup_motors(){
   enemy1.attach(2);
   enemy2.attach(3);
   enemy3.attach(4);
+  enemy4.attach(5);
+  char2.attach(9);
   //set position back to 0
   enemy1.write(0);
   enemy2.write(0);
   enemy3.write(0);
+  enemy4.write(0);
+  char2.write(0);
   //write flags
   enemy1_on = false;
   enemy2_on = false;
   enemy3_on = false;
+  enemy4_on = false;
+  char2_on = false;
 }
 
 void buttonPush(){
   buttonState = digitalRead(buttonPin);
-  if(buttonState == HIGH){
+  if(buttonState == HIGH && !char2_on){
     Serial.println("BUTTON PUSHED");
+    char2.write(180);
+    char2_on = true;
   }else{
-    Serial.println("BUTTON NOT PUSHED");
+    //Serial.println("BUTTON NOT PUSHED");
+  }
+
+  if(char2_on){
+    if(char2Timer == 0){
+      char2Timer = 2000;
+      char2.write(0);
+      char2_on = false;
+    }else{
+      char2Timer--;
+    }
   }
 }
 
