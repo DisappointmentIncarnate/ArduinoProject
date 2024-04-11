@@ -64,9 +64,10 @@ void loop()
     }
 
     if(upperTimer == 0){
-      randNumber = random(2)+1;
-      if(randNumber % 2 == 0){
+      randNumber = random(3)+1;
+      if(randNumber == 3){
         enemy4.write(180);
+        Serial.println("Enemy 4 Extended");
         enemy4_on = true;
       }
       upperTimer == 2000;
@@ -109,6 +110,11 @@ void buttonPush(){
     Serial.println("BUTTON PUSHED");
     char2.write(180);
     char2_on = true;
+    if(enemy4_on){
+      enemy4.write(0);
+      Serial.println("Enemy 4 Hit");
+      enemy4_on = false;
+    }
   }else{
     //Serial.println("BUTTON NOT PUSHED");
   }
