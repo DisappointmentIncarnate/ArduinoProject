@@ -70,7 +70,7 @@ void loop()
         Serial.println("Enemy 4 Extended");
         enemy4_on = true;
       }
-      upperTimer == 2000;
+      upperTimer = 2000;
     }else{
       upperTimer--;
     }
