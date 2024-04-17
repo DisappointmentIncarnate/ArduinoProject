@@ -1,11 +1,11 @@
 #include <Servo.h>
 
 Servo enemy1; 
-int enemy1_location[] = {250, 330};
+int enemy1_location[] = {250, 330}; //{6,8};
 Servo enemy2; //512 is the potentiometer area's halfway point
-int enemy2_location[] = {472, 552};
+int enemy2_location[] = {472, 552}; //{11,13};
 Servo enemy3; 
-int enemy3_location[] = {730, 770};
+int enemy3_location[] = {730, 770}; //{16,18};
 Servo enemy4;
 Servo char2;
 
@@ -65,9 +65,9 @@ void loop()
 
     if(upperTimer == 0){
       randNumber = random(3)+1;
-      if(randNumber == 3){
-        enemy4.write(180);
-        Serial.println("Enemy 4 Extended");
+     if(randNumber == 3){
+        enemy4.write(100);
+        //Serial.println("Enemy 4 Extended");
         enemy4_on = true;
       }
       upperTimer = 2000;
@@ -76,9 +76,9 @@ void loop()
     }
 
     retractServo(determineArea(potVal));
-    if(potVal == 0 ){
-      running = false;
-    }
+    //if(potVal == 0 ){
+      //running = false;
+    //}
     buttonPush();
   }
 }
@@ -91,24 +91,24 @@ void startup_motors(){
   enemy4.attach(5);
   char2.attach(9);
   //set position back to 0
-  enemy1.write(0);
-  enemy2.write(0);
-  enemy3.write(0);
-  enemy4.write(0);
-  char2.write(0);
+  enemy1.write(100);
+  enemy2.write(100);
+  enemy3.write(100);
+  enemy4.write(100);
+  char2.write(100);
   //write flags
   enemy1_on = false;
   enemy2_on = false;
   enemy3_on = false;
-  enemy4_on = false;
-  char2_on = false;
+  //enemy4_on = false;
+  //char2_on = false;
 }
 
 void buttonPush(){
   buttonState = digitalRead(buttonPin);
   if(buttonState == HIGH && !char2_on){
     Serial.println("BUTTON PUSHED");
-    char2.write(180);
+    char2.write(0);
     char2_on = true;
     if(enemy4_on){
       enemy4.write(0);
@@ -122,7 +122,7 @@ void buttonPush(){
   if(char2_on){
     if(char2Timer == 0){
       char2Timer = 2000;
-      char2.write(0);
+      char2.write(100);
       char2_on = false;
     }else{
       char2Timer--;
@@ -135,17 +135,17 @@ void extendServo(int num, int potVal){
   if(num == 1 && !enemy1_on && currPos != 1){
     //servo 1
     Serial.println("Enemy 1 Extend");
-    enemy1.write(180);
+    enemy1.write(0);
     enemy1_on = true;
   }else if(num == 2 && !enemy2_on && currPos != 2){
     //servo 2
     Serial.println("Enemy 2 Extend");
-    enemy2.write(180);
+    enemy2.write(0);
     enemy2_on = true;
   }else if(num == 3 && !enemy3_on && currPos != 3){
     //servo 3
     Serial.println("Enemy 3 Extend");
-    enemy3.write(180);
+    enemy3.write(0);
     enemy3_on = true;
   }else{
     //Serial.println(num);
@@ -154,15 +154,15 @@ void extendServo(int num, int potVal){
 
 void retractServo(int position){
   if(enemy1_on && position == 1){
-    enemy1.write(0);
+    enemy1.write(100);
     enemy1_on = false;
     Serial.println("Enemy 1 hit");
   }else if(enemy2_on && position == 2){
-    enemy2.write(0);
+    enemy2.write(100);
     enemy2_on = false;
     Serial.println("Enemy 2 hit");
   }else if(enemy3_on && position == 3){
-    enemy3.write(0);
+    enemy3.write(100);
     enemy3_on = false;
     Serial.println("Enemy 3 hit");
   }
